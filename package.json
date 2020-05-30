@@ -1,0 +1,20 @@
+{
+  "name": "index-array",
+  "version": "1.0.0",
+  "description": "An array of objects that is automatically indexed when you search it.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheDro/index-array.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheDro/index-array/issues"
+  },
+  "homepage": "https://github.com/TheDro/index-array#readme"
+}
