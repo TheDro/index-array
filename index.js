@@ -33,7 +33,6 @@ class IndexArray extends Array {
             keys = [keys]
         }
 
-        debugger
         this.indexes = this.indexes || {}
 
         for (let key of keys) {
@@ -47,12 +46,18 @@ class IndexArray extends Array {
     }
 
     push(item) {
-        super.push(item)
+        let result = super.push(item)
         let i = this.length - 1
         for (let key in this.indexes) {
             let value = item[key]
             this.indexes[key][value] = i
         }
+        return result
+    }
+
+    add(item) {
+        this.push(item)
+        return this
     }
 
     remove(arg) {
@@ -77,7 +82,7 @@ class IndexArray extends Array {
             this.reindex()
         }
 
-        return result
+        return this
     }
 
     clone() {
