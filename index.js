@@ -7,9 +7,19 @@ class IndexArray extends Array {
             super(...indexArray)
             this.indexes = indexArray.indexes
         } else {
-            super(...arguments)
+            super()
             this.indexes = {}
+            
+            for (let item of arguments) {
+                this.push(item)
+            }
         }
+    }
+
+    _proxyWrap(item) {
+        return new Proxy(item, {
+            set: setHandler.bind(this)
+        })
     }
 
     fetch(obj) {
@@ -46,6 +56,7 @@ class IndexArray extends Array {
     }
 
     push(item) {
+        item = this._proxyWrap(item)
         let result = super.push(item)
         let i = this.length - 1
         for (let key in this.indexes) {
@@ -66,19 +77,22 @@ class IndexArray extends Array {
             let key = Object.keys(arg)[0]
             this.fetch(arg)
             let i = this.indexes[key][arg[key]]
-            result = this.splice(i,1)[0]
+            if (i > -1) {
+                result = this.splice(i,1)[0]
+            }
 
         } else if (typeof arg === 'object') {
             let i = this.indexOf(arg)
-            result = this.splice(i, 1)[0]
+            if (i > -1) {
+                result = this.splice(i, 1)[0]
+            }
 
         } else if (typeof arg === 'number') {
             let i = arg
             result = this.splice(i, 1)[0]
-
         }
 
-        if (result != undefined) {
+        if (result !== undefined && result !== null) {
             this.reindex()
         }
 
@@ -89,6 +103,16 @@ class IndexArray extends Array {
         return new IndexArray(this)
     }
 
+}
+
+function setHandler(obj, prop, value) {
+
+    let oldValue = obj[prop]
+    let i = this.indexes[prop][oldValue]
+    delete this.indexes[prop][oldValue]
+    this.indexes[prop][value] = i
+
+    return Reflect.set(obj, prop, value)
 }
 
 export default IndexArray
