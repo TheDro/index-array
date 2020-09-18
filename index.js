@@ -23,17 +23,46 @@ class IndexArray extends Array {
     }
 
     fetch(obj) {
+        return this[this.fetchIndex(obj)]
+    }
+
+    fetchIndex(obj) {
         if (typeof obj === 'object' && Object.keys(obj).length === 1) {
             let key = Object.keys(obj)[0]
             if (!this.indexes[key]) {
                 this.reindex(key)
             }
-            return this[this.indexes[key][obj[key]]]
+            return this.indexes[key][obj[key]]
         } else {
-            return this.filter((item) => {
-                return item === obj
-            })
+            return this.indexOf(obj)
         }
+    }
+
+    replace(obj, item) {
+        let i = null
+        if (typeof obj === 'object') {
+            i = this.fetchIndex(obj)
+        } else if (typeof obj === 'number') {
+            i = obj
+        }
+
+        if (!(i > -1)) {
+            return
+        }
+
+        let oldItem = this[i]
+
+        this[i] = item
+        for (let key in this.indexes) {
+            let value = item[key]
+            let oldValue = oldItem[key]
+            this.indexes[key][value] = i
+
+            delete this.indexes[key][oldValue]
+            this.indexes[key][value] = i
+        }
+
+        return this
     }
 
     reindex(keys) {
@@ -73,16 +102,8 @@ class IndexArray extends Array {
 
     remove(arg) {
         let result = null
-        if (typeof arg === 'object' && Object.keys(arg).length === 1) {
-            let key = Object.keys(arg)[0]
-            this.fetch(arg)
-            let i = this.indexes[key][arg[key]]
-            if (i > -1) {
-                result = this.splice(i,1)[0]
-            }
-
-        } else if (typeof arg === 'object') {
-            let i = this.indexOf(arg)
+        if (typeof arg === 'object') {
+            let i = this.fetchIndex(arg)
             if (i > -1) {
                 result = this.splice(i, 1)[0]
             }
