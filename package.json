@@ -1,10 +1,10 @@
 {
   "name": "index-array",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "An array of objects that is automatically indexed when you search it.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/TheDro/index-array/issues"
   },
-  "homepage": "https://github.com/TheDro/index-array#readme"
+  "homepage": "https://github.com/TheDro/index-array#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/plugin-transform-modules-commonjs": "^7.12.1",
+    "@babel/preset-env": "^7.12.11",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3"
+  }
 }

@@ -17,6 +17,7 @@ class IndexArray extends Array {
     }
 
     _proxyWrap(item) {
+        if (typeof item != 'object') return
         return new Proxy(item, {
             set: setHandler.bind(this)
         })
@@ -129,9 +130,11 @@ class IndexArray extends Array {
 function setHandler(obj, prop, value) {
 
     let oldValue = obj[prop]
-    let i = this.indexes[prop][oldValue]
-    delete this.indexes[prop][oldValue]
-    this.indexes[prop][value] = i
+    if (this.indexes[prop]) {
+        let i = this.indexes[prop][oldValue]
+        delete this.indexes[prop][oldValue]
+        this.indexes[prop][value] = i
+    }
 
     return Reflect.set(obj, prop, value)
 }
