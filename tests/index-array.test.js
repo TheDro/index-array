@@ -188,7 +188,7 @@ describe('remove', () => {
     array.fetch({id: 1})
     let result = array.remove(1)
 
-    // expect(result).toBe(array)
+    expect(result).toBe(array)
     expect(array.length).toEqual(2)
     expect(array[0]).toEqual(firstObject)
     expect(array[1]).toEqual(thirdObject)
