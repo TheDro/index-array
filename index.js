@@ -53,7 +53,7 @@ class IndexArray extends Array {
 
         let oldItem = this[i]
 
-        this[i] = item
+        this[i] = this._proxyWrap(item)
         for (let key in this.indexes) {
             let value = item[key]
             let oldValue = oldItem[key]

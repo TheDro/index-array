@@ -217,4 +217,28 @@ describe('proxy wrapper', () => {
     expect(array.indexes).toEqual({id: {2: 0, 3: 1}})
     expect(array.fetch({id: 2})).toEqual({id: 2, name: 'two', description: 'first'})
   })
+
+  test('is called by push', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let array = new IndexArray(firstObject)
+    array.fetch({id: 1})
+    array.push(secondObject)
+
+    array[1].id = 4
+    expect(array.indexes).toEqual({id: {1: 0, 4: 1}})
+    expect(array.fetch({id: 4})).toEqual({id: 4, name: 'three'})
+  })
+
+  test('is called by replace', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let array = new IndexArray(firstObject, secondObject)
+    array.fetch({id: 1})
+    array.replace(1, {id: 2, name: 'two'})
+
+    array[1].id = 4
+    expect(array.indexes).toEqual({id: {1: 0, 4: 1}})
+    expect(array.fetch({id: 4})).toEqual({id: 4, name: 'two'})
+  })
 })
