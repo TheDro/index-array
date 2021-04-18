@@ -30,6 +30,7 @@ let secondResult = array.fetch({id: 2}) // {id: 2, name: 'one'}
 Currently, the following methods from Arrays are supported and will not break the indexing functionality:
 
 - `push`
+- `splice`
 
 The following additional methods are also supported. See code examples below.
 
