@@ -108,19 +108,20 @@ class IndexArray extends Array {
         if (typeof arg === 'object') {
             let i = this.fetchIndex(arg)
             if (i > -1) {
-                result = this.splice(i, 1)[0]
+                this.splice(i, 1)[0]
             }
 
         } else if (typeof arg === 'number') {
             let i = arg
-            result = this.splice(i, 1)[0]
-        }
-
-        if (result !== undefined && result !== null) {
-            this.reindex()
+            this.splice(i, 1)[0]
         }
 
         return this
+    }
+
+    splice() {
+        this.indexes = {}
+        return super.splice(...arguments)
     }
 
     toArray() {

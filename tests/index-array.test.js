@@ -177,6 +177,7 @@ describe('remove', () => {
     expect(array.length).toEqual(2)
     expect(array[0]).toEqual(firstObject)
     expect(array[1]).toEqual(thirdObject)
+    array.fetch({id: 1})
     expect(array.indexes).toEqual({id: {1: 0, 5: 1}})
   })
 
@@ -192,7 +193,39 @@ describe('remove', () => {
     expect(array.length).toEqual(2)
     expect(array[0]).toEqual(firstObject)
     expect(array[1]).toEqual(thirdObject)
+    array.fetch({id: 1})
     expect(array.indexes).toEqual({id: {1: 0, 5: 1}})
+  })
+
+  test('removes an object without breaking indexes', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let thirdObject = {id: 5, name: 'five'}
+    let array = new IndexArray(firstObject, secondObject, thirdObject)
+
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(2)
+    array.remove({id: 3})
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(1)
+  })
+})
+
+describe('splice', () => {
+  test('calls original method without breaking index', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let thirdObject = {id: 5, name: 'five'}
+    let array = new IndexArray(firstObject, secondObject, thirdObject)
+
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(2)
+    array.splice(1,0)
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(2)
+    array.splice(1,1)
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(1)
   })
 })
 
