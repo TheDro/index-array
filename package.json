@@ -1,6 +1,6 @@
 {
   "name": "index-array",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "An array of objects that is automatically indexed when you search it.",
   "main": "index.js",
   "scripts": {
