@@ -242,3 +242,33 @@ describe('proxy wrapper', () => {
     expect(array.fetch({id: 4})).toEqual({id: 4, name: 'two'})
   })
 })
+
+describe('toArray', () => {
+  test('converts IndexArray into Array', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let indexArray = new IndexArray(firstObject, secondObject)
+    let array = indexArray.toArray()
+
+    expect(array[0]).toEqual(indexArray[0])
+    expect(array[1]).toEqual(indexArray[1])
+    expect(array.indexes).toBeUndefined()
+    expect(Object.getPrototypeOf(array)).not.toEqual(Object.getPrototypeOf(indexArray))
+    expect(Object.getPrototypeOf(array)).toEqual(Object.getPrototypeOf([1,2,3]))
+  })
+})
+
+describe('flatMap', () => {
+  test("uses Array's implementation", () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let indexArray = new IndexArray(firstObject, secondObject)
+    let array = [firstObject, secondObject]
+
+    let indexArrayResult = indexArray.flatMap((item) => [item, item])
+    let arrayResult = array.flatMap((item) => [item, item])
+
+    expect(indexArrayResult).toEqual(arrayResult)
+    expect(Object.getPrototypeOf(indexArrayResult)).toEqual(Object.getPrototypeOf(arrayResult))
+  })
+})

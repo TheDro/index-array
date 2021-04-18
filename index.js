@@ -5,11 +5,13 @@ class IndexArray extends Array {
         if (arguments.length === 1 && arguments[0] instanceof IndexArray) {
             let indexArray = arguments[0]
             super(...indexArray)
-            this.indexes = indexArray.indexes
+            Object.defineProperty(this, 'indexes',
+              {value: indexArray.indexes, enumerable: false, writable: true})
         } else {
             super()
-            this.indexes = {}
-            
+            Object.defineProperty(this, 'indexes',
+              {value: {}, enumerable: false, writable: true})
+
             for (let item of arguments) {
                 this.push(item)
             }
@@ -119,6 +121,14 @@ class IndexArray extends Array {
         }
 
         return this
+    }
+
+    toArray() {
+        return [...this]
+    }
+
+    flatMap() {
+        return this.toArray().flatMap(...arguments)
     }
 
     clone() {
