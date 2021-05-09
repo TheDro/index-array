@@ -63,6 +63,16 @@ describe('fetch', () => {
     expect(Object.keys(array.indexes).sort()).toEqual(['id', 'name'])
     expect(array.indexes).toEqual({id: {1: 0, 3: 1}, name: {one: 0, three: 1}})
   })
+
+  test('it does not add undefined to index when an object is missing a key', () => {
+    firstObject = {id: 1, name: 'one'}
+    secondObject = {name: 'three'}
+    array = new IndexArray(firstObject, secondObject)
+    array.fetch({id: 1})
+    array.fetch({name: 'one'})
+
+    expect(array.indexes).toEqual({id: {1: 0}, name: {one: 0, three: 1}})
+  })
 })
 
 
@@ -146,6 +156,15 @@ describe('push', () => {
     expect(array.length).toEqual(3)
     expect(array[2]).toEqual(newObject)
     expect(array.indexes).toEqual({id: {1: 0, 3: 1, 5: 2}})
+  })
+
+  test('does not add undefined to index', () => {
+    let array = new IndexArray({id: 1, name: 'one'})
+    array.fetch({id: 1})
+    let newObject = {name: 'two'}
+    array.push(newObject)
+
+    expect(array.indexes).toEqual({id: {1: 0}})
   })
 })
 
@@ -273,6 +292,21 @@ describe('proxy wrapper', () => {
     array[1].id = 4
     expect(array.indexes).toEqual({id: {1: 0, 4: 1}})
     expect(array.fetch({id: 4})).toEqual({id: 4, name: 'two'})
+  })
+
+  test('returns the correct object after pushing objects with missing keys', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {name: 'three'}
+    let thirdObject = {name: 'five'}
+    let array = new IndexArray(firstObject)
+    array.fetch({id: 1})
+    array.push(secondObject)
+    array.push(thirdObject)
+
+    array[1].id = 3
+    expect(array.fetch({id: 3})).toEqual(secondObject)
+    array[2].id = 5
+    expect(array.fetch({id: 5})).toEqual(thirdObject)
   })
 })
 
