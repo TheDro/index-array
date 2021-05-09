@@ -81,7 +81,7 @@ class IndexArray extends Array {
             let index = {}
             for (let i = this.length-1; i >= 0; i--) {
                 let value = this[i][key]
-                index[value] = i
+                if (value !== undefined) index[value] = i
             }
             this.indexes[key] = index
         }
@@ -93,7 +93,7 @@ class IndexArray extends Array {
         let i = this.length - 1
         for (let key in this.indexes) {
             let value = item[key]
-            this.indexes[key][value] = i
+            if (value !== undefined) this.indexes[key][value] = i
         }
         return result
     }
@@ -143,8 +143,13 @@ function setHandler(obj, prop, value) {
     let oldValue = obj[prop]
     if (this.indexes[prop]) {
         let i = this.indexes[prop][oldValue]
-        delete this.indexes[prop][oldValue]
-        this.indexes[prop][value] = i
+        if (i !== undefined) {
+            delete this.indexes[prop][oldValue]
+            this.indexes[prop][value] = i
+        } else {
+            // We can't find the index of the original object. For now, we just remove the index.
+            delete this.indexes[prop]
+        }
     }
 
     return Reflect.set(obj, prop, value)
