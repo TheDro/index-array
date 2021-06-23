@@ -246,6 +246,28 @@ describe('splice', () => {
     expect(array.fetchIndex({id: 1})).toBe(0)
     expect(array.fetchIndex({id: 5})).toBe(1)
   })
+
+  test('wraps new items in proxy', () => {
+    let firstObject = {id: 1, name: 'one'}
+    let secondObject = {id: 3, name: 'three'}
+    let array = new IndexArray(firstObject, secondObject)
+    let thirdObject = {id: 5, name: 'five'}
+    let fourthObject = {id: 7, name: 'seven'}
+
+
+    array.splice(1, 0, thirdObject, fourthObject)
+    console.log(JSON.stringify(array.toArray()))
+    expect(array.fetchIndex({id: 1})).toBe(0)
+    expect(array.fetchIndex({id: 5})).toBe(1)
+    expect(array.fetchIndex({id: 7})).toBe(2)
+    expect(array.fetchIndex({id: 3})).toBe(3)
+    array.fetch({id: 5}).id = 2
+    array.fetch({id: 7}).id = 8
+    expect(array.fetchIndex({id: 2})).toBe(1)
+    expect(array.fetchIndex({id: 8})).toBe(2)
+    expect(array.fetch({id: 2})).toEqual(thirdObject)
+    expect(array.fetch({id: 8})).toEqual(fourthObject)
+  })
 })
 
 describe('clone', () => {

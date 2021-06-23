@@ -119,9 +119,12 @@ class IndexArray extends Array {
         return this
     }
 
-    splice() {
+    splice(start, deleteCount, ...items) {
         this.indexes = {}
-        return super.splice(...arguments)
+        let wrappedItems = items.map((item) => {
+            return this._proxyWrap(item)
+        })
+        return super.splice(start, deleteCount, ...wrappedItems)
     }
 
     toArray() {
